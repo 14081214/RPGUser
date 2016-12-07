@@ -112,33 +112,32 @@ class Main extends egret.DisplayObjectContainer {
 
     private textfield:egret.TextField;
 
-    private user : User;
-    private hero : Hero;
-    private sword : Equipment;
-    private jewel : Jewel;
+    //private user:User;
+    //private hero:Hero;
+    //private sword:Equipment;
+    //private jewel:Jewel;
 
     /**
      * 创建游戏场景
      * Create a game scene
      */
     private createGameScene():void {
-         this.user = new User("Player");
-         this.hero = new Hero("Hero",Quality.WHITE,1,10,20,15);
-         this.sword = new Equipment("sword",Quality.WHITE,5,4,4);
-         this.jewel = new Jewel(1,0,0,0);
+         var user:User = new User("Player");
+         var hero:Hero = new Hero("Hero",1,1,10,20,15);
+         var sword:Equipment = new Equipment("sword",2,1,5,4,4);
+         var jewel:Jewel = new Jewel(1,0,0,0);
          
-         this.sword.addJewl(this.jewel);
-         this.hero.addEquipment(this.sword);
-         this.user.addHeroInTeam(this.hero);
-         this.user.addHeros(this.hero);
+         sword.addJewl(jewel);
+         hero.addEquipment(sword);
+         user.addHeroInTeam(hero);
+         user.addHeros(hero);
 
-         console.log(this.hero.getAttack());
-         console.log(this.hero.getDefence());
-         console.log(this.hero.getAglie());
-         console.log(this.hero.getMaxHP());
-         console.log("jewel fightpower :" + this.jewel.fightPower);
-         console.log("sword fightpower :" + this.sword.fightPower);
-         console.log("hero fightpower :" + this.hero.getFightPower());
+         console.log(hero.getAttack());
+         console.log(hero.getDefence());
+         console.log(hero.getAglie());
+         console.log("jewel fightpower :" + jewel.fightPower);
+         console.log("sword fightpower :" + sword.fightPower);
+         console.log("hero fightpower :" + hero.getFightPower());
 
         var sky:egret.Bitmap = this.createBitmapByName("bg_jpg");
         this.addChild(sky);

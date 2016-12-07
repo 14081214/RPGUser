@@ -4,9 +4,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var Cache = function (target, propertyKey, descriptor) {
-    var method = descriptor.value;
-    descriptor.value = function () {
+var Cache = function (target, propertyKey, desc) {
+    var method = desc.value;
+    desc.value = function () {
         var cacheKey = "__cache" + propertyKey;
         if (!target[cacheKey]) {
             target[cacheKey] = method.apply(this);
@@ -14,36 +14,6 @@ var Cache = function (target, propertyKey, descriptor) {
         return target[cacheKey];
     };
 };
-var Quality;
-(function (Quality) {
-    Quality[Quality["WHITE"] = 1] = "WHITE";
-    Quality[Quality["GREEN"] = 1.1] = "GREEN";
-    Quality[Quality["BLUE"] = 1.2] = "BLUE";
-    Quality[Quality["PURPLE"] = 1.4] = "PURPLE";
-    Quality[Quality["ORAGE"] = 1.8] = "ORAGE";
-})(Quality || (Quality = {}));
-var WeaponType;
-(function (WeaponType) {
-    WeaponType[WeaponType["HANDSWORD"] = 1] = "HANDSWORD";
-    WeaponType[WeaponType["GREATSWORD"] = 1.8] = "GREATSWORD";
-    WeaponType[WeaponType["AXE"] = 2] = "AXE";
-    WeaponType[WeaponType["KATANA"] = 1.5] = "KATANA";
-    WeaponType[WeaponType["HAMMER"] = 2.5] = "HAMMER";
-})(WeaponType || (WeaponType = {}));
-var ArmorType;
-(function (ArmorType) {
-    ArmorType[ArmorType["LIGHTARMOR"] = 1] = "LIGHTARMOR";
-    ArmorType[ArmorType["LEATHERARMOR"] = 1.4] = "LEATHERARMOR";
-    ArmorType[ArmorType["PLATEARMOR"] = 2] = "PLATEARMOR";
-    ArmorType[ArmorType["HEAVYARMOR"] = 2.4] = "HEAVYARMOR";
-    ArmorType[ArmorType["NOTHINGTOWEAR"] = 0.2] = "NOTHINGTOWEAR";
-})(ArmorType || (ArmorType = {}));
-var JewelPromotion;
-(function (JewelPromotion) {
-    JewelPromotion[JewelPromotion["ATTACKPRMOTE"] = 1] = "ATTACKPRMOTE";
-    JewelPromotion[JewelPromotion["DEFENCEPRMOTE"] = 2] = "DEFENCEPRMOTE";
-    JewelPromotion[JewelPromotion["AGILEPRMOTE"] = 3] = "AGILEPRMOTE";
-})(JewelPromotion || (JewelPromotion = {}));
 var equipmentType;
 (function (equipmentType) {
     equipmentType[equipmentType["SWORD"] = 1] = "SWORD";
@@ -134,7 +104,7 @@ var Hero = (function () {
     p.getFightPower = function () {
         var result = 0;
         this.equipments.forEach(function (e) { return result += e.fightPower; });
-        result += (10 + this.getAttack() * 10 + this.getDefence() * 8 + this.getAglie() * 6) * this.level * this.quality;
+        result += this.level * 10 + this.quality * 10 + this.getAttack() * 5 + this.getDefence() * 3 + this.getAglie() * 4;
         return result;
     };
     __decorate([
@@ -159,7 +129,7 @@ var Hero = (function () {
 }());
 egret.registerClass(Hero,'Hero');
 var Equipment = (function () {
-    function Equipment(name, equipmenttype, attack, defence, agile) {
+    function Equipment(name, lever, equipmenttype, attack, defence, agile) {
         this.name = "";
         this.level = 1;
         this.quality = 0;
@@ -169,6 +139,7 @@ var Equipment = (function () {
         this.isWeapon = false;
         this.jewels = [];
         this.name = name;
+        this.level = lever;
         this.equipmentType = equipmenttype;
         this.attack = attack;
         this.defence = defence;
@@ -197,7 +168,7 @@ var Equipment = (function () {
         ,function () {
             var result = 0;
             this.jewels.forEach(function (e) { return result += e.fightPower; });
-            return result + this.quality * 10 + this.getAttack() * 50 + this.getAglie() * this.quality * 40;
+            return result + this.level * 10 + this.quality * 10 + this.getAttack() * 5 + this.getAglie() * 3 + this.quality * 4;
         }
     );
     __decorate([
@@ -209,9 +180,6 @@ var Equipment = (function () {
     __decorate([
         Cache
     ], p, "getAglie", null);
-    __decorate([
-        Cache
-    ], p, "fightPower", null);
     return Equipment;
 }());
 egret.registerClass(Equipment,'Equipment');
@@ -229,12 +197,9 @@ var Jewel = (function () {
     var d = __define,c=Jewel,p=c.prototype;
     d(p, "fightPower"
         ,function () {
-            return this.level * 10 + this.attack * 50 + this.defence * 30 + this.agile * 40;
+            return this.level * 10 + this.attack * 5 + this.defence * 3 + this.agile * 4;
         }
     );
-    __decorate([
-        Cache
-    ], p, "fightPower", null);
     return Jewel;
 }());
 egret.registerClass(Jewel,'Jewel');

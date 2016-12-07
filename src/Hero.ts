@@ -1,6 +1,6 @@
-var Cache: MethodDecorator = (target : any,propertyKey,descriptor : PropertyDescriptor) => {
-    const method = descriptor.value;
-    descriptor.value = function(){
+var Cache: MethodDecorator = (target : any,propertyKey,desc:PropertyDescriptor) => {
+    const method = desc.value;
+    desc.value = function(){
         var cacheKey = "__cache" + propertyKey;
         if(!target[cacheKey]){
             target[cacheKey] = method.apply(this);
@@ -9,43 +9,12 @@ var Cache: MethodDecorator = (target : any,propertyKey,descriptor : PropertyDesc
     }
 }
 
-enum Quality {
-    WHITE = 1,
-    GREEN = 1.1,
-    BLUE = 1.2,
-    PURPLE = 1.4,
-    ORAGE = 1.8
-}
-
-enum WeaponType {
-    HANDSWORD = 1,
-    GREATSWORD = 1.8,
-    AXE = 2,
-    KATANA = 1.5,
-    HAMMER = 2.5
-}
-
-enum ArmorType{
-    LIGHTARMOR = 1,
-    LEATHERARMOR = 1.4,
-    PLATEARMOR = 2,
-    HEAVYARMOR = 2.4,
-    NOTHINGTOWEAR = 0.2
-}
-
-enum JewelPromotion{
-    ATTACKPRMOTE = 1,
-    DEFENCEPRMOTE = 2,
-    AGILEPRMOTE = 3,
-}
 enum equipmentType{
     SWORD = 1,
     KNIFE = 2,
     AXE = 3,
     GUN = 4,
 }
-
-
 
 class User{
     name = "";
@@ -90,17 +59,17 @@ class Hero{
     curHP = 0;
     totalHP = 0;
 
-    quality  = 0;
+    quality = 0;
     attack = 0;
     defence = 0;
     agile = 0;
     
     exp = 0;
     totalExp = 0;
-    equipments : Equipment[] = [];
+    equipments:Equipment[] = [];
 
 
-    constructor(name:string,level:number,quality:Quality,attack:number,defence:number,agile:number){
+    constructor(name:string,level:number,quality:number,attack:number,defence:number,agile:number){
        this.name = name;
        this.level = level;
        this.quality = quality;
@@ -152,7 +121,7 @@ class Hero{
     getFightPower(){
         var result = 0;
         this.equipments.forEach(e => result += e.fightPower);
-        result += (10 + this.getAttack() * 10 + this.getDefence() * 8 + this.getAglie() * 6) * this.level * this.quality;
+        result += this.level*10+this.quality*10+this.getAttack()*5+this.getDefence()*3+this.getAglie()*4;
         return result;
     }
 }
@@ -161,17 +130,17 @@ class Equipment{
     name = "";
     level = 1;
     equipmentType : number;
-    quality  = 0;
+    quality = 0;
 
     attack = 0;
     defence = 0;
     agile = 0;
     isWeapon = false;
-    
     jewels : Jewel[] = [];
 
-    constructor(name:string,equipmenttype:number,attack:number,defence:number,agile:number) {
+    constructor(name:string,lever:number,equipmenttype:number,attack:number,defence:number,agile:number) {
         this.name = name;
+        this.level = lever;
         this.equipmentType = equipmenttype;
         this.attack = attack;
         this.defence = defence;
@@ -203,11 +172,10 @@ class Equipment{
          return result;
      }
 
-     @Cache
      get fightPower(){
         var result = 0;
         this.jewels.forEach(e => result += e.fightPower);
-        return result + this.quality * 10 + this.getAttack() * 50 + this.getAglie() * this.quality * 40;
+        return result + this.level * 10 + this.quality * 10 + this.getAttack() * 5 + this.getAglie() * 3 + this.quality * 4;
 
     }
 
@@ -226,8 +194,7 @@ class Jewel{
         this.agile = agile;
     }
 
-    @Cache
     get fightPower(){
-        return this.level * 10 + this.attack * 50 + this.defence * 30 + this.agile * 40;
+        return this.level * 10 + this.attack * 5 + this.defence * 3 + this.agile * 4;
     }
 }
